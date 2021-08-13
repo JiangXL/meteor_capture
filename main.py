@@ -8,7 +8,7 @@ import logging
 from indi_stuff import Device, IndiClient
 import io
 import configparser
-from streamer import Streamer
+#from streamer import Streamer
 import atexit
 from utils import exit_handler
 from post_process import Processor
@@ -22,15 +22,15 @@ config.read('settings.ini')
 
 # connect the server
 indiclient = IndiClient(config)
-streamer = Streamer(config)
+#streamer = Streamer(config)
 processor = Processor(config)
 
 processes = []
 
-processor.streamer = streamer
+#processor.streamer = streamer
 indiclient.newFrameCB = processor.push_frame
 
-streamer.run()
+#streamer.run()
 processor_process = processor.run()
 processes.append(processor_process)
 
@@ -43,8 +43,8 @@ time.sleep(5)
 indiclient.stop_streaming()
 indiclient.set_bin()
 indiclient.set_exp()
-indiclient.set_gain()
-indiclient.set_cooling_temp()
+#indiclient.set_gain()
+#indiclient.set_cooling_temp()
 indiclient.start_streaming()
 
 while True:

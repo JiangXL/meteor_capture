@@ -102,7 +102,8 @@ class Processor:
         self._prev = cur
         cv.accumulateWeighted(diff_bin, self._runningAvg, 0.2)
         avg_img_int = cv.convertScaleAbs(self._runningAvg)
-        _, contours, hierarchy = cv.findContours(avg_img_int, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        #_, contours, hierarchy = cv.findContours(avg_img_int, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        contours, hierarchy = cv.findContours(avg_img_int, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
         for c in contours:
             contour_area = cv.contourArea(c)
@@ -151,7 +152,8 @@ class Processor:
     def saveMeteor(self, buf):
         def saveMeteor(buffer):
             size = buffer[0]['img'].shape
-            fourcc = cv.VideoWriter_fourcc('H', '2', '6', '4')
+            #fourcc = cv.VideoWriter_fourcc('H', '2', '6', '4')
+            fourcc = cv.VideoWriter_fourcc('X', 'V', 'I', 'D')
             vw = cv.VideoWriter(f"{buffer[0]['time'].strftime('%Y-%m-%d-%H_%M_%S.%f')[:-3]}.mkv", fourcc,
                                 self._fps, size[::-1])
 
