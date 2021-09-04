@@ -22,21 +22,25 @@ config.read('settings.ini')
 processor = Processor(config)
 processor.streamer = None
 processor.run()
-cap = cv.VideoCapture('test2.mp4')
+#cap = cv.VideoCapture('test2.mp4')
+#cap = cv.VideoCapture('test_杨门工业区_20210822.ogv')
+cap = cv.VideoCapture('indi_record_2021-08-22@15-01-55_F01750-18633.ser_F00001-16884.avi')
 
 ctr = 0
 
 while cap.isOpened():
-    # print(ctr)
+    print(ctr)
     ctr += 1
     ret, frame = cap.read()
-    # cv.imshow('live', frame)
-    frame = cv.resize(frame, (1304, 976))
+    #cv.imshow('live', frame)
+    #frame = cv.resize(frame, (1304, 976))
     frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     processor.push_frame(frame)
+    time.sleep(0.04)
 
-    if cv.waitKey(30) & 0xFF == ord('q'):
-        break
+
+    #if cv.waitKey(30) & 0xFF == ord('q'):
+    #    break
 
 
 

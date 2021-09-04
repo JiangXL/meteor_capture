@@ -87,8 +87,9 @@ class Processor:
             img -= cv.absdiff(img, self._dark)
         self._buffer.add(img)
 
-        # cur = np.float32(img)
-        cur = cv.cvtColor(img, cv.COLOR_BAYER_RG2GRAY)
+        #cur = np.float32(img)
+        cur = img
+        #cur = cv.cvtColor(img, cv.COLOR_BAYER_RG2GRAY)
         if self._prev is not None:
             prev = self._prev
         else:
@@ -100,14 +101,16 @@ class Processor:
         diff = cv.absdiff(cur, prev)
         _, diff_bin = cv.threshold(diff, 20, 255, cv.THRESH_BINARY)
         self._prev = cur
-        cv.accumulateWeighted(diff_bin, self._runningAvg, 0.2)
-        avg_img_int = cv.convertScaleAbs(self._runningAvg)
+        #cv.accumulateWeighted(diff_bin, self._runningAvg, 0.2)
+        #avg_img_int = cv.convertScaleAbs(self._runningAvg)
+        avg_img_int = diff_bin
         #_, contours, hierarchy = cv.findContours(avg_img_int, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         contours, hierarchy = cv.findContours(avg_img_int, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
         for c in contours:
             contour_area = cv.contourArea(c)
-            if contour_area > 20:
+            #if contour_area > 20:
+            if contour_area > 3:
                 contour = GlobalEvent(c, contour_area)
                 centroid_str = str(contour.center)
                 if centroid_str in self.global_events:
@@ -133,12 +136,12 @@ class Processor:
                 to_discard.append(ge_k)
 
                 # exclude trails that are too short or too long
-                if 0.3 < last_updated - ge.st_t < 5:
+                if 0.3 < last_updated - ge.st_t < 20:
                     # exclude stationary trails
                     if np.linalg.norm(ge.st_pos - ge.last_pos) > 5:
-                        self.replay(self._buffer.getCopy(), ge.max_rect)
+                        #self.replay(self._buffer.getCopy(), ge.max_rect)
                         self.saveMeteor(self._buffer.getCopy())
-                        replay = True
+                        replay = False
                         break
 
         for k in to_discard:
@@ -210,6 +213,3 @@ class Processor:
             self.frame_queue.get()
             self.frame_queue.get()
             self.frame_queue.put(frame)
-
-
-
